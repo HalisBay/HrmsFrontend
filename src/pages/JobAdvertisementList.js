@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link, NavLink } from "react-router-dom";
 import { Button, Icon, Menu, Table } from "semantic-ui-react";
 import JobAdvertisementService from "../services/JobAdvertisementService";
 
@@ -9,13 +10,13 @@ export default function JobAdvertisementList() {
     jobAdvertisementService
       .getJobs()
       .then((result) => setJobAdvertisements(result.data.data));
-  });
+  },[]);
 
   return (
     <div>
       <Table celled>
         <Table.Header>
-          <Table.Row>
+          <Table.Row >
             <Table.HeaderCell>Pozisyon </Table.HeaderCell>
             <Table.HeaderCell>İlan durumu</Table.HeaderCell>
             <Table.HeaderCell>İş Tanımı</Table.HeaderCell>
@@ -31,8 +32,8 @@ export default function JobAdvertisementList() {
 
         <Table.Body>
           {jobAdvertisements.map((jobAdvertisement) => (
-            <Table.Row>
-              <Table.Cell>{jobAdvertisement.jobPosition.jobName}</Table.Cell>
+            <Table.Row key={jobAdvertisement.id} >
+              <Table.Cell> {jobAdvertisement.jobPosition.jobName} </Table.Cell>
               <Table.Cell>
                 {jobAdvertisement.activated ? (
                   <Icon color="green" name="checkmark" />
@@ -40,9 +41,9 @@ export default function JobAdvertisementList() {
                   <Icon color="red" name="close" />
                 )}
               </Table.Cell>
-              <Table.Cell>{jobAdvertisement.description}</Table.Cell>
-              <Table.Cell>{jobAdvertisement.employer.companyName}</Table.Cell>
-              <Table.Cell>{jobAdvertisement.city.cityName}</Table.Cell>
+              <Table.Cell ><Link to={`/job-advertisement/${jobAdvertisement.id}/description`}>  İş hakkında daha fazla bilgi edinmek için tıklyınız</Link> </Table.Cell>
+              <Table.Cell>{jobAdvertisement.employer.companyName } </Table.Cell>
+              <Table.Cell>{jobAdvertisement.city.cityName }</Table.Cell>
               <Table.Cell>{jobAdvertisement.minSalary}</Table.Cell>
               <Table.Cell>{jobAdvertisement.maxSalary}</Table.Cell>
               <Table.Cell>{jobAdvertisement.openPosition}</Table.Cell>
@@ -67,7 +68,7 @@ export default function JobAdvertisementList() {
                 </Menu.Item>
               </Menu>
               <Menu floated="left" pagination>
-                <Button icon labelPosition="left" primary>
+                <Button icon labelPosition="left" primary exact as={NavLink} to="/add-job-advertisement" >
                   <Icon name="add " /> Yeni iş ekle
                 </Button>
               </Menu>
